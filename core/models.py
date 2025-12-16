@@ -6,6 +6,7 @@ class SendingGroup(models.Model):
     label = models.TextField(max_length=255)
 
 class SendingUnit(models.Model):
+    # SendingUnit(sending_group: SendingGroup, name: str, email: str, file: File)
     sending_group = models.ForeignKey(SendingGroup, on_delete=models.CASCADE, related_name='sending_units')
     name = models.TextField(max_length=255)
     email = models.EmailField(max_length=255)
@@ -17,7 +18,7 @@ class SendingUnit(models.Model):
 class Link(models.Model):
     sending_unit = models.ForeignKey(SendingUnit, on_delete=models.CASCADE, related_name='links')
     link = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    access_code = models.CharField(max_length=6, blank=True)
+    access_code = models.CharField(max_length=6, blank=True) # Code a 6 chiffres générée automatiquement lors de la création du lien
     used = models.BooleanField(default=False)
 
 
@@ -26,3 +27,12 @@ class Link(models.Model):
         if not self.access_code:
             self.access_code = secrets.randbelow(899999) + 100000 # 100000 à 999999
         super().save(*args, **kwargs)
+
+    def get_download_url(self):
+        return f"/download/{self.link}"
+    
+    def get_access_code(self):
+        return self.access_code
+    
+    def is_used(self):
+        return self.used
