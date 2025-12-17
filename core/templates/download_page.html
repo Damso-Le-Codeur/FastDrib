@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Téléchargement sécurisé</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .download-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        .logo {
+            text-align: center;
+            padding: 30px 0;
+            background: #f8f9fa;
+            border-radius: 15px 15px 0 0;
+        }
+        .logo h3 {
+            color: #333;
+            font-weight: 600;
+        }
+        .form-container {
+            padding: 30px;
+        }
+        .security-badge {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .btn-download {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+            width: 100%;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="download-card">
+        <div class="logo">
+            <h3>🔒 Téléchargement sécurisé</h3>
+            <p class="text-muted mb-0">Système de distribution de fichiers</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="security-badge">
+                <strong><i class="bi bi-shield-check"></i> Authentification requise</strong>
+                <p class="mb-0 mt-2">Bonjour <strong>{{ unit_name }}</strong>, veuillez confirmer votre identité pour télécharger votre fichier.</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Adresse email</label>
+                    <input type="email" 
+                           name="email" 
+                           id="id_email" 
+                           class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                           placeholder="votre@email.com"
+                           value="{{ form.email.value|default:'' }}"
+                           required>
+                    {% if form.email.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <label for="id_access_code" class="form-label">Code de sécurité à 6 chiffres</label>
+                    <input type="text" 
+                           name="access_code" 
+                           id="id_access_code" 
+                           class="form-control {% if form.access_code.errors %}is-invalid{% endif %}" 
+                           placeholder="123456"
+                           maxlength="6"
+                           pattern="\d{6}"
+                           title="Entrez un code à 6 chiffres"
+                           value="{{ form.access_code.value|default:'' }}"
+                           required>
+                    <div class="form-text">
+                        <small><i class="bi bi-info-circle"></i> Ce code vous a été envoyé par email</small>
+                    </div>
+                    {% if form.access_code.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.access_code.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn btn-download">
+                    <i class="bi bi-download"></i> Télécharger le fichier
+                </button>
+            </form>
+            
+            <div class="mt-4 text-center">
+                <div class="alert alert-light border">
+                    <small>
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        <strong>Sécurité :</strong> Ce lien est à usage unique et expire après utilisation.
+                        Chaque téléchargement est enregistré pour des raisons de traçabilité.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    
+    <script>
+        // Focus sur le premier champ
+        document.getElementById('id_email').focus();
+        
+        // Validation du code à 6 chiffres
+        document.getElementById('id_access_code').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 6) {
+                this.value = this.value.slice(0, 6);
+            }
+        });
+        
+        // Pré-remplir l'email si présent dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        if (email) {
+            document.getElementById('id_email').value = email;
+            document.getElementById('id_access_code').focus();
+        }
+    </script>
+</body>
+</html>

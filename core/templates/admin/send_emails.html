@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer les emails - FastDistrib</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .card-header h5 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 2rem;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-text {
+            color: #1e40af;
+            font-size: 1rem;
+        }
+
+        .alert-text strong {
+            color: #1e3a8a;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-text {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        code {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            margin: 0 0.25rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Email Preview */
+        .email-preview {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .preview-content {
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .preview-placeholder {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        /* Recipient List */
+        .recipient-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .recipient-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .recipient-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .recipient-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+
+        .recipient-info {
+            flex: 1;
+        }
+
+        .recipient-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .recipient-email {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card-header {
+                padding: 1.5rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Template Variables */
+        .template-variables {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .variable-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .variable-badge:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .variable-badge i {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h5>
+                    <i class="fas fa-paper-plane"></i>
+                    Envoyer les emails - {{ group.label }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert">
+                    <div class="alert-title">
+                        <i class="fas fa-info-circle"></i>
+                        Prêt à envoyer
+                    </div>
+                    <div class="alert-text">
+                        <strong>{{ units_count }}</strong> email(s) seront envoyés aux destinataires qui n'ont pas encore reçu d'email.
+                    </div>
+                </div>
+
+                <form method="post" id="emailForm">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="form-label">Objet de l'email</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="email_subject" 
+                               name="email_subject" 
+                               value="Votre fichier personnel" 
+                               required
+                               placeholder="Ex: Votre fichier personnel - {{ group.label }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Corps du message</label>
+                        <div class="template-variables">
+                            <div class="variable-badge" onclick="insertVariable('{nom}')">
+                                <i class="fas fa-user"></i>
+                                {nom}
+                            </div>
+                            <div class="variable-badge" onclick="insertVariable('{code}')">
+                                <i class="fas fa-key"></i>
+                                {code}
+                            </div>
+                            <div class="variable-badge" onclick="insertVariable('{lien}')">
+                                <i class="fas fa-link"></i>
+                                {lien}
+                            </div>
+                        </div>
+                        <textarea class="form-control" 
+                                  id="email_body" 
+                                  name="email_body" 
+                                  rows="10" 
+                                  required
+                                  placeholder="Écrivez votre message ici...">Bonjour {nom},
+
+Vous trouverez ci-dessous le lien pour télécharger votre fichier personnel.
+
+Code d'accès: {code}
+Lien de téléchargement: {lien}
+
+Instructions:
+1. Cliquez sur le lien ci-dessus
+2. Entrez votre email et le code d'accès
+3. Téléchargez votre fichier
+
+Ce lien est valable une seule fois et expire dans 7 jours.
+
+Cordialement,
+L'équipe d'administration
+                        </textarea>
+                        <div class="form-text">
+                            <i class="fas fa-lightbulb"></i>
+                            Les variables seront automatiquement remplacées pour chaque destinataire
+                        </div>
+                    </div>
+
+                    <!-- Email Preview -->
+                    <div class="email-preview">
+                        <div class="preview-header">
+                            <div class="alert-title">
+                                <i class="fas fa-eye"></i>
+                                Aperçu du message
+                            </div>
+                            <button type="button" class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem;" onclick="updatePreview()">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualiser
+                            </button>
+                        </div>
+                        <div class="preview-content" id="emailPreview">
+                            <div class="preview-placeholder">
+                                L'aperçu s'affichera ici après avoir rempli le formulaire.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Préparation de l'envoi...</div>
+                    </div>
+
+                    <!-- Recipient List -->
+                    {% if units_count <= 10 %}
+                    <div class="recipient-list">
+                        <div class="alert-title" style="margin-bottom: 1rem;">
+                            <i class="fas fa-users"></i>
+                            Destinataires ({{ units_count }})
+                        </div>
+                        <!-- Vous pourriez ajouter une boucle ici pour afficher les destinataires -->
+                    </div>
+                    {% endif %}
+
+                    <!-- Buttons -->
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Envoyer les emails
+                        </button>
+                        <a href="{% url 'group_detail' group.id %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Insérer une variable dans le texte
+        function insertVariable(variable) {
+            const textarea = document.getElementById('email_body');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            
+            textarea.value = text.substring(0, start) + variable + text.substring(end);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + variable.length;
+            
+            updatePreview();
+            
+            // Notification
+            showNotification(`Variable ${variable} insérée`, 'success');
+        }
+
+        // Mettre à jour l'aperçu
+        function updatePreview() {
+            const subject = document.getElementById('email_subject').value;
+            const body = document.getElementById('email_body').value;
+            const preview = document.getElementById('emailPreview');
+            
+            let previewHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <strong>Objet :</strong> ${subject}
+                </div>
+                <hr style="margin: 1rem 0; border-color: #e2e8f0;">
+                <div style="white-space: pre-wrap;">
+            `;
+            
+            // Remplacer les variables par des exemples
+            const exampleBody = body
+                .replace(/{nom}/g, '<span style="background: #fef3c7; padding: 0.125rem 0.25rem; border-radius: 2px;">Jean Dupont</span>')
+                .replace(/{code}/g, '<span style="background: #fef3c7; padding: 0.125rem 0.25rem; border-radius: 2px;">123456</span>')
+                .replace(/{lien}/g, '<span style="background: #fef3c7; padding: 0.125rem 0.25rem; border-radius: 2px;">https://example.com/download/token</span>');
+            
+            previewHTML += exampleBody + '</div>';
+            preview.innerHTML = previewHTML;
+        }
+
+        // Notification
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: '#10b981',
+                warning: '#f59e0b',
+                info: '#3b82f6',
+                error: '#ef4444'
+            };
+
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideIn 0.3s ease;
+            `;
+
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Animation pour les notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Gestion de l'envoi du formulaire
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            // Validation basique
+            const subject = document.getElementById('email_subject').value.trim();
+            const body = document.getElementById('email_body').value.trim();
+            
+            if (!subject || !body) {
+                e.preventDefault();
+                showNotification('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+            
+            // Confirmation
+            if (!confirm(`Êtes-vous sûr de vouloir envoyer ${units_count} email(s) ?`)) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Afficher la barre de progression
+            progressContainer.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span class="spinner"></span>
+                Envoi en cours...
+            `;
+            
+            // Simuler la progression
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress > 90) {
+                    progress = 90;
+                }
+                progressFill.style.width = progress + '%';
+                progressText.textContent = `Envoi en cours... ${Math.round(progress)}%`;
+            }, 500);
+            
+            // Laisser le formulaire se soumettre normalement
+            // La progression continuera jusqu'au rechargement de la page
+        });
+
+        // Initialiser l'aperçu
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePreview();
+            
+            // Mettre à jour l'aperçu quand les champs changent
+            document.getElementById('email_subject').addEventListener('input', updatePreview);
+            document.getElementById('email_body').addEventListener('input', updatePreview);
+        });
+
+        // Prévenir la navigation si le formulaire a des modifications
+        let formChanged = false;
+        document.getElementById('email_subject').addEventListener('input', () => formChanged = true);
+        document.getElementById('email_body').addEventListener('input', () => formChanged = true);
+        
+        window.addEventListener('beforeunload', function(e) {
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = 'Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?';
+            }
+        });
+    </script>
+</body>
+</html>

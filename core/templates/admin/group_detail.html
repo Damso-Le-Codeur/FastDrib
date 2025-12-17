@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail du Groupe - FastDistrib</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Main Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #ffd166 0%, #ffa62e 100%);
+            color: #1e293b;
+        }
+
+        .badge-secondary {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        /* Progress Bars */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar-container {
+            width: 100px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Search and Filter */
+        .table-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        /* Checkbox */
+        .checkbox-cell {
+            width: 30px;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        /* Avatar */
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 0.75rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-icon:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Bottom Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2.4rem;
+            top: 0.25rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-marker.success { background: #10b981; }
+        .timeline-marker.warning { background: #f59e0b; }
+
+        .timeline-content h6 {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-text {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Selected Count */
+        .selected-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #f1f5f9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .table-controls {
+                flex-direction: column;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-folder-open"></i> {{ group.label }}</h1>
+                <p>
+                    <i class="fas fa-calendar-alt"></i> 
+                    Créé le {{ group.created_at|date:"d/m/Y" }}
+                    • 
+                    <i class="fas fa-hashtag"></i> 
+                    ID: {{ group.id }}
+                </p>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'send_emails' group.id %}" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Envoyer emails
+                </a>
+                <a href="{% url 'export_results' group.id %}" class="btn btn-outline">
+                    <i class="fas fa-download"></i>
+                    Exporter CSV
+                </a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">{{ total_count }}</div>
+                <div class="stat-label">Total destinataires</div>
+                <small class="text-muted">100% du groupe</small>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="stat-number">{{ sent_count }}</div>
+                <div class="stat-label">Emails envoyés</div>
+                <div class="progress-bar-container" style="margin-top: 0.5rem;">
+                    <div class="progress-bar-fill" style="width: {% widthratio sent_count total_count 100 %}%"></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="stat-number">{{ received_count }}</div>
+                <div class="stat-label">Fichiers téléchargés</div>
+                <div class="progress-bar-container" style="margin-top: 0.5rem;">
+                    <div class="progress-bar-fill" style="width: {% widthratio received_count total_count 100 %}%"></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number">{{ total_count|add:"-sent_count" }}</div>
+                <div class="stat-label">En attente</div>
+                <small class="text-muted">{% widthratio total_count|add:"-sent_count" total_count 100 %}% restants</small>
+            </div>
+        </div>
+
+        <!-- Destinataires Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    <i class="fas fa-list"></i>
+                    Liste des destinataires ({{ units|length }})
+                </h2>
+            </div>
+            <div class="card-body">
+                <!-- Search and Filter -->
+                <div class="table-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Rechercher..." id="searchInput">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" onclick="filterTable('all')">
+                            <i class="fas fa-list"></i> Tous
+                        </button>
+                        <button class="btn btn-outline" onclick="filterTable('received')">
+                            <i class="fas fa-check-circle"></i> Reçus
+                        </button>
+                        <button class="btn btn-outline" onclick="filterTable('sent')">
+                            <i class="fas fa-paper-plane"></i> Envoyés
+                        </button>
+                        <button class="btn btn-outline" onclick="filterTable('pending')">
+                            <i class="fas fa-clock"></i> En attente
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table id="recipientsTable">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-cell">
+                                    <input type="checkbox" class="form-check-input" id="selectAll">
+                                </th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Date d'envoi</th>
+                                <th>Statut</th>
+                                <th>Date réception</th>
+                                <th>Code d'accès</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for unit in units %}
+                            <tr class="recipient-row" data-status="{% if unit.received %}received{% elif unit.sending_date %}sent{% else %}pending{% endif %}">
+                                <td>
+                                    <input type="checkbox" class="form-check-input recipient-checkbox" value="{{ unit.id }}">
+                                </td>
+                                <td>
+                                    <div class="group-info">
+                                        <div class="avatar">
+                                            {{ unit.name|first|upper }}
+                                        </div>
+                                        <div>
+                                            <div class="group-name">{{ unit.name }}</div>
+                                            <small class="text-muted">
+                                                Fichier: {{ unit.file.name|slice:"15:"|truncatechars:30 }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-envelope text-muted me-2"></i>
+                                        {{ unit.email }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if unit.sending_date %}
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-paper-plane text-warning me-2"></i>
+                                            <div>
+                                                <div>{{ unit.sending_date|date:"d/m/Y" }}</div>
+                                                <small class="text-muted">{{ unit.sending_date|date:"H:i" }}</small>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if unit.received %}
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle"></i> Reçu
+                                        </span>
+                                    {% elif unit.sending_date %}
+                                        <span class="badge badge-warning">
+                                            <i class="fas fa-paper-plane"></i> Envoyé
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-secondary">
+                                            <i class="fas fa-clock"></i> En attente
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if unit.received_date %}
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-download text-success me-2"></i>
+                                            <div>
+                                                <div>{{ unit.received_date|date:"d/m/Y" }}</div>
+                                                <small class="text-muted">{{ unit.received_date|date:"H:i" }}</small>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% with unit.links.first as link %}
+                                        {% if link %}
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-key text-info me-2"></i>
+                                                <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px; font-family: monospace;">
+                                                    {{ link.access_code }}
+                                                </code>
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        {% if unit.sending_date and not unit.received %}
+                                            <a href="{% url 'resend_link' unit.id %}" class="btn-icon" title="Renvoyer le lien">
+                                                <i class="fas fa-redo"></i>
+                                            </a>
+                                        {% endif %}
+                                        <button class="btn-icon" onclick="copyToClipboard('{{ unit.email }}')" title="Copier l'email">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">
+                                            <i class="fas fa-inbox"></i>
+                                        </div>
+                                        <h3>Aucun destinataire trouvé</h3>
+                                        <p class="empty-text">Commencez par ajouter des destinataires à ce groupe.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Selected Actions -->
+                <div class="selected-info">
+                    <div>
+                        <span id="selectedCount">0</span> élément(s) sélectionné(s)
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-outline" onclick="sendSelected()">
+                            <i class="fas fa-paper-plane"></i> Envoyer sélection
+                        </button>
+                        <button class="btn btn-outline" onclick="exportSelected()">
+                            <i class="fas fa-download"></i> Exporter sélection
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-grid">
+            <!-- Statistics Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-chart-pie"></i>
+                        Statistiques du groupe
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="progress-wrapper" style="flex-direction: column; gap: 1rem;">
+                        <div style="width: 100%;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Reçus</span>
+                                <span>{{ received_count }} ({% widthratio received_count total_count 100 %}%)</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {% widthratio received_count total_count 100 %}%; background: linear-gradient(90deg, #10b981 0%, #059669 100%);"></div>
+                            </div>
+                        </div>
+                        <div style="width: 100%;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Envoyés</span>
+                                <span>{{ sent_count|add:"-received_count" }} ({% widthratio sent_count|add:"-received_count" total_count 100 %}%)</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {% widthratio sent_count|add:"-received_count" total_count 100 %}%; background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);"></div>
+                            </div>
+                        </div>
+                        <div style="width: 100%;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>En attente</span>
+                                <span>{{ total_count|add:"-sent_count" }} ({% widthratio total_count|add:"-sent_count" total_count 100 %}%)</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {% widthratio total_count|add:"-sent_count" total_count 100 %}%; background: linear-gradient(90deg, #64748b 0%, #475569 100%);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-history"></i>
+                        Dernières activités
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        {% for unit in units|slice:":5" %}
+                            {% if unit.received_date %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong>{{ unit.name }}</strong>
+                                        <small class="text-muted">{{ unit.received_date|timesince }}</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">a téléchargé son fichier</p>
+                                </div>
+                            </div>
+                            {% elif unit.sending_date %}
+                            <div class="timeline-item">
+                                <div class="timeline-marker warning"></div>
+                                <div class="timeline-content">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong>{{ unit.name }}</strong>
+                                        <small class="text-muted">{{ unit.sending_date|timesince }}</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">a reçu l'email de notification</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% empty %}
+                        <div class="text-center py-3 text-muted">
+                            <i class="fas fa-history fa-2x mb-2"></i>
+                            <p>Aucune activité récente</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sélection multiple
+        document.getElementById('selectAll')?.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.recipient-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateSelectedCount();
+        });
+
+        document.querySelectorAll('.recipient-checkbox')?.forEach(cb => {
+            cb.addEventListener('change', updateSelectedCount);
+        });
+
+        function updateSelectedCount() {
+            const selected = document.querySelectorAll('.recipient-checkbox:checked').length;
+            document.getElementById('selectedCount').textContent = selected;
+        }
+
+        // Recherche
+        document.getElementById('searchInput')?.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.recipient-row');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Filtrage
+        function filterTable(status) {
+            const rows = document.querySelectorAll('.recipient-row');
+            
+            rows.forEach(row => {
+                if (status === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = row.dataset.status === status ? '' : 'none';
+                }
+            });
+        }
+
+        // Copier dans le presse-papier
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Email copié dans le presse-papier !', 'success');
+            });
+        }
+
+        // Actions groupées
+        function sendSelected() {
+            const selected = Array.from(document.querySelectorAll('.recipient-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            if (selected.length === 0) {
+                showNotification('Sélectionnez au moins un destinataire', 'warning');
+                return;
+            }
+            
+            showNotification(`Envoi en cours pour ${selected.length} destinataire(s)...`, 'info');
+            // TODO: Implémenter l'envoi réel
+        }
+
+        function exportSelected() {
+            const selected = Array.from(document.querySelectorAll('.recipient-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            if (selected.length === 0) {
+                showNotification('Sélectionnez au moins un destinataire', 'warning');
+                return;
+            }
+            
+            showNotification(`Export en cours pour ${selected.length} destinataire(s)...`, 'info');
+            // TODO: Implémenter l'export réel
+        }
+
+        // Notification simple
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: '#10b981',
+                warning: '#f59e0b',
+                info: '#3b82f6',
+                error: '#ef4444'
+            };
+
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideIn 0.3s ease;
+            `;
+
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Styles d'animation pour les notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Animation sur les cartes
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animation sur les lignes du tableau
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8fafc';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+    </script>
+</body>
+</html>

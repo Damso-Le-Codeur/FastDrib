@@ -1,0 +1,20 @@
+<!-- Après le formulaire de connexion -->
+<div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+    <p style="color: #64748b; margin-bottom: 1rem;">
+        <i class="fas fa-info-circle"></i>
+        Premier accès ?
+    </p>
+    <a href="{% url 'create_user_view' %}" class="btn" style="
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    ">
+        <i class="fas fa-crown"></i>
+        Créer le premier administrateur
+    </a>
+</div>

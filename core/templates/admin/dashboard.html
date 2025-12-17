@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - FastDistrib</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-title p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Main Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .folder-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .group-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .group-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar-container {
+            width: 100px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            color: #10b981;
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-icon:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Bottom Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .activity-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: #f8fafc;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .activity-date {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .alert {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-text {
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-text {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">
+                <h1>Tableau de Bord</h1>
+                <p>Bienvenue dans votre centre de contrôle FastDistrib</p>
+            </div>
+            <div class="header-actions">
+                <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i>
+                        Deconnexion
+                    </button>
+                </form>
+                </a>
+                <a href="{% url 'create_group' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    Nouveau Groupe
+                </a>
+            </div>
+        </div>
+
+
+        <!-- Recent Groups Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    <i class="fas fa-folder-open"></i>
+                    Groupes d'envoi récents
+                </h2>
+                <div class="action-buttons">
+                    <button class="btn-icon" id="filterBtn">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <button class="btn-icon" id="sortBtn">
+                        <i class="fas fa-sort"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if groups %}
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom du groupe</th>
+                                    <th>Date création</th>
+                                    <th>Destinataires</th>
+                                    <th>Envoyés</th>
+                                    <th>Reçus</th>
+                                    <th>Taux de succès</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for group in groups %}
+                                    <tr>
+                                        <td>
+                                            <div class="group-info">
+                                                <div class="folder-icon">
+                                                    <i class="fas fa-folder"></i>
+                                                </div>
+                                                <span class="group-name">{{ group.label|default:"Groupe sans nom" }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ group.created_date|default:"-" }}</td>
+                                        <td>{{ group.total_units|default:"0" }}</td>
+                                        <td>{{ group.sent_count|default:"0" }}</td>
+                                        <td>{{ group.received_count|default:"0" }}</td>
+                                        <td>
+                                            <div class="progress-wrapper">
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar-fill" style="width: {{ group.success_rate|default:0 }}%"></div>
+                                                </div>
+                                                <span class="progress-text">{{ group.success_rate|default:0 }}%</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{% url 'group_detail' group.id %}" class="btn-icon">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'export_results' group.id %}" class="btn-icon">
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <h3>Aucun groupe créé</h3>
+                        <p class="empty-text">Commencez par créer votre premier groupe d'envoi.</p>
+                        <a href="{% url 'create_group' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Créer un groupe
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="bottom-grid">
+            <!-- Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-chart-bar"></i>
+                        Activité récente
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {% for group in groups|slice:":3" %}
+                        <div class="activity-item">
+                            <div class="activity-header">
+                                <span class="activity-title">{{ group.label|truncatechars:30 }}</span>
+                                <span class="badge badge-primary">{{ group.total_units|default:0 }} fichiers</span>
+                            </div>
+                            <div class="activity-date">Créé le {{ group.created_date|default:"-" }}</div>
+                        </div>
+                    {% empty %}
+                        <div class="activity-item">
+                            <div class="activity-header">
+                                <span class="activity-title">Aucune activité récente</span>
+                            </div>
+                            <div class="activity-date">Créez votre premier groupe pour commencer</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <i class="fas fa-bell"></i>
+                        Notifications
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert">
+                        <div class="alert-title">
+                            <i class="fas fa-info-circle"></i>
+                            Bienvenue sur FastDistrib !
+                        </div>
+                        <div class="alert-text">
+                            Commencez par créer votre premier groupe d'envoi pour distribuer vos fichiers efficacement.
+                        </div>
+                    </div>
+                    <a href="{% url 'create_group' %}" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem; display: block; text-align: center;">
+                        <i class="fas fa-plus"></i>
+                        Créer un nouveau groupe
+                    </a>
+                    <button class="btn btn-outline" style="width: 100%;">
+                        <i class="fas fa-question-circle"></i>
+                        Voir le guide d'utilisation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion des boutons de filtrage et tri
+        document.getElementById('filterBtn')?.addEventListener('click', function() {
+            alert('Fonctionnalité de filtrage à venir !');
+        });
+
+        document.getElementById('sortBtn')?.addEventListener('click', function() {
+            alert('Fonctionnalité de tri à venir !');
+        });
+
+        // Animation sur les cartes de statistiques
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animation sur les lignes du tableau
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8fafc';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+
+        // Confirmation pour certaines actions
+        document.querySelectorAll('a[href*="export"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!confirm('Êtes-vous sûr de vouloir exporter les données de ce groupe ?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

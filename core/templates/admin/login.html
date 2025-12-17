@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion - FastDistrib{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <i class="fas fa-lock fa-3x mb-3"></i>
+                    <h2 class="mb-0">Connexion</h2>
+                    <p class="mb-0">FastDistrib Administration</p>
+                </div>
+                <div class="card-body p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">
+                                <i class="fas fa-user me-2"></i>Nom d'utilisateur
+                            </label>
+                            <input type="text" 
+                                   name="username" 
+                                   id="id_username" 
+                                   class="form-control" 
+                                   required 
+                                   autofocus>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">
+                                <i class="fas fa-key me-2"></i>Mot de passe
+                            </label>
+                            <input type="password" 
+                                   name="password" 
+                                   id="id_password" 
+                                   class="form-control" 
+                                   required>
+                        </div>
+                        
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="text-muted mb-0">
+                            <small>
+                                Vous n'avez pas de compte ? 
+                                <a href="mailto:admin@fastdistrib.com" class="text-decoration-none">
+                                    Contactez l'administrateur
+                                </a>
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'home' %}" class="text-decoration-none">
+                    <i class="fas fa-arrow-left me-2"></i>Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+</style>
+{% endblock %}

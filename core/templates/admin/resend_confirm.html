@@ -1,0 +1,50 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5><i class="bi bi-arrow-repeat"></i> Renvoyer le lien</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h6><i class="bi bi-exclamation-triangle"></i> Confirmation requise</h6>
+                    <p class="mb-0">
+                        Vous êtes sur le point de renvoyer un nouveau lien à :
+                    </p>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6>Destinataire :</h6>
+                        <p class="mb-1"><strong>Nom :</strong> {{ unit.name }}</p>
+                        <p class="mb-1"><strong>Email :</strong> {{ unit.email }}</p>
+                        <p class="mb-0"><strong>Fichier :</strong> {{ unit.file.name|slice:"15:" }}</p>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <small>
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Note :</strong> L'ancien lien sera immédiatement invalidé.
+                        Un nouveau code à 6 chiffres sera généré et envoyé par email.
+                    </small>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-send-check"></i> Confirmer et renvoyer
+                        </button>
+                        <a href="{% url 'group_detail' unit.sending_group.id %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle"></i> Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

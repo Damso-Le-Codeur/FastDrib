@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultat de l'Envoi - FastDistrib</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-header h5 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Success Card */
+        .card-success {
+            border: 2px solid #10b981;
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.95) 0%, rgba(167, 243, 208, 0.95) 100%);
+        }
+
+        .card-success .card-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+        }
+
+        .card-success .card-body {
+            background: transparent;
+        }
+
+        /* Error Card */
+        .card-error {
+            border: 2px solid #ef4444;
+            background: linear-gradient(135deg, rgba(254, 226, 226, 0.95) 0%, rgba(254, 202, 202, 0.95) 100%);
+        }
+
+        .card-error .card-header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+        }
+
+        .card-error .card-body {
+            background: transparent;
+        }
+
+        /* Warning Card */
+        .card-warning {
+            border: 2px solid #f59e0b;
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.95) 0%, rgba(253, 230, 138, 0.95) 100%);
+        }
+
+        .card-warning .card-header {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card.success {
+            border-top: 4px solid #10b981;
+        }
+
+        .stat-card.error {
+            border-top: 4px solid #ef4444;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card.success .stat-number {
+            color: #10b981;
+        }
+
+        .stat-card.error .stat-number {
+            color: #ef4444;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .stat-card.success .progress-fill {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+
+        .stat-card.error .progress-fill {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -2.4rem;
+            top: 0.25rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-marker.primary { background: #667eea; }
+        .timeline-marker.warning { background: #f59e0b; }
+        .timeline-marker.success { background: #10b981; }
+
+        .timeline-content h6 {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+        }
+
+        /* Icons Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Troubleshooting */
+        .troubleshooting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .troubleshooting-item {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .troubleshooting-item h6 {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .troubleshooting-item ul {
+            margin-left: 1.5rem;
+            color: #64748b;
+        }
+
+        .troubleshooting-item li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .troubleshooting-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Content Center */
+        .content-center {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .warning-icon {
+            font-size: 5rem;
+            color: #f59e0b;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-clipboard-check"></i> Résultat de l'envoi</h1>
+                <p>
+                    Groupe: <strong>{{ group.label }}</strong>
+                    • 
+                    <i class="fas fa-calendar-alt"></i> 
+                    {{ group.created_at|date:"d/m/Y" }}
+                </p>
+            </div>
+            <div>
+                <a href="{% url 'group_detail' group.id %}" class="btn btn-outline">
+                    <i class="fas fa-eye"></i>
+                    Voir le groupe
+                </a>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        {% if sent_count > 0 %}
+        <div class="card card-success">
+            <div class="card-header">
+                <h5><i class="fas fa-check-circle"></i> Envoi réussi !</h5>
+            </div>
+            <div class="card-body">
+                <div class="content-center">
+                    <div class="success-icon pulse">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 style="color: #065f46; margin-bottom: 1rem;">
+                        ✅ {{ sent_count }} email(s) envoyé(s) avec succès
+                    </h3>
+                    <p style="color: #64748b; max-width: 600px; margin: 0 auto;">
+                        Les destinataires ont reçu leur lien de téléchargement.
+                        Vous pouvez maintenant suivre les téléchargements depuis le tableau de bord.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Error Message -->
+        {% if failed_count > 0 %}
+        <div class="card card-error">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle"></i> Échecs d'envoi</h5>
+            </div>
+            <div class="card-body">
+                <div class="content-center">
+                    <div class="warning-icon pulse">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 style="color: #7f1d1d; margin-bottom: 1rem;">
+                        ⚠️ {{ failed_count }} email(s) n'ont pas pu être envoyés
+                    </h3>
+                    <div class="alert alert-warning" style="max-width: 600px; margin: 1.5rem auto;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Causes possibles :</strong>
+                        </div>
+                        <ul style="text-align: left; margin-bottom: 0;">
+                            <li>Adresse email invalide</li>
+                            <li>Problème de configuration SMTP</li>
+                            <li>Serveur de messagerie distant indisponible</li>
+                            <li>Limite de dépassement de quota</li>
+                        </ul>
+                    </div>
+                    <p style="color: #64748b; max-width: 600px; margin: 0 auto;">
+                        Vous pouvez réessayer d'envoyer ces emails individuellement depuis la page de détail du groupe.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card success">
+                <div class="stat-number">{{ sent_count }}</div>
+                <div class="stat-label">Emails envoyés</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" 
+                         style="width: {% if sent_count|add:failed_count > 0 %}{% widthratio sent_count sent_count|add:failed_count 100 %}%{% else %}0%{% endif %}">
+                    </div>
+                </div>
+                <small class="text-muted" style="display: block; margin-top: 0.5rem;">
+                    {% if sent_count|add:failed_count > 0 %}
+                        {% widthratio sent_count sent_count|add:failed_count 100 %}% de succès
+                    {% else %}
+                        0% de succès
+                    {% endif %}
+                </small>
+            </div>
+
+            <div class="stat-card error">
+                <div class="stat-number">{{ failed_count }}</div>
+                <div class="stat-label">Échecs d'envoi</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" 
+                         style="width: {% if sent_count|add:failed_count > 0 %}{% widthratio failed_count sent_count|add:failed_count 100 %}%{% else %}0%{% endif %}">
+                    </div>
+                </div>
+                <small class="text-muted" style="display: block; margin-top: 0.5rem;">
+                    {% if sent_count|add:failed_count > 0 %}
+                        {% widthratio failed_count sent_count|add:failed_count 100 %}% d'échec
+                    {% else %}
+                        0% d'échec
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle"></i> Prochaines étapes</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker primary"></div>
+                        <div class="timeline-content">
+                            <h6>1. Suivi des téléchargements</h6>
+                            <p>Surveillez le statut des téléchargements depuis la page de détail du groupe.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker warning"></div>
+                        <div class="timeline-content">
+                            <h6>2. Gestion des échecs</h6>
+                            <p>Pour les échecs d'envoi, vous pouvez renvoyer les emails individuellement.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker success"></div>
+                        <div class="timeline-content">
+                            <h6>3. Export des résultats</h6>
+                            <p>Une fois tous les téléchargements terminés, exportez les résultats en CSV.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Tableau de bord
+                    </a>
+                    <a href="{% url 'group_detail' group.id %}" class="btn btn-primary">
+                        <i class="fas fa-users"></i>
+                        Voir le groupe
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        {% if failed_count > 0 %}
+        <div class="card card-warning">
+            <div class="card-header">
+                <h5><i class="fas fa-tools"></i> Dépannage des échecs d'envoi</h5>
+            </div>
+            <div class="card-body">
+                <div class="troubleshooting-grid">
+                    <div class="troubleshooting-item">
+                        <h6><i class="fas fa-cog"></i> Vérifier la configuration :</h6>
+                        <ul>
+                            <li>Configuration SMTP dans settings.py</li>
+                            <li>Identifiants du serveur d'emails</li>
+                            <li>Ports et protocoles (TLS/SSL)</li>
+                        </ul>
+                    </div>
+                    <div class="troubleshooting-item">
+                        <h6><i class="fas fa-user-check"></i> Vérifier les destinataires :</h6>
+                        <ul>
+                            <li>Format des adresses emails</li>
+                            <li>Adresses valides et existantes</li>
+                            <li>Absence de filtres anti-spam</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="#" class="btn btn-outline" style="background: white;">
+                        <i class="fas fa-question-circle"></i>
+                        Consulter la documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Animation des barres de progression
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animer les barres de progression
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const finalWidth = bar.style.width;
+                bar.style.width = '0%';
+                
+                setTimeout(() => {
+                    bar.style.transition = 'width 1.5s ease-in-out';
+                    bar.style.width = finalWidth;
+                }, 300);
+            });
+
+            // Animation des icônes de succès/erreur
+            const successIcon = document.querySelector('.success-icon');
+            const warningIcon = document.querySelector('.warning-icon');
+            
+            if (successIcon) {
+                successIcon.classList.add('pulse');
+            }
+            if (warningIcon) {
+                warningIcon.classList.add('pulse');
+            }
+
+            // Auto-redirection optionnelle après 15 secondes vers le groupe
+            // setTimeout(() => {
+            //     window.location.href = "{% url 'group_detail' group.id %}";
+            // }, 15000);
+
+            // Afficher une notification si des échecs
+            {% if failed_count > 0 %}
+            setTimeout(() => {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                    z-index: 1000;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    animation: slideIn 0.3s ease;
+                `;
+
+                notification.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>${failed_count} email(s) en échec</strong><br>
+                        <small>Vérifiez la configuration SMTP</small>
+                    </div>
+                `;
+
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, 5000);
+            }, 1000);
+            {% endif %}
+        });
+
+        // Ajouter les styles d'animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes progressAnimation {
+                from {
+                    width: 0%;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
