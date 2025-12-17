@@ -16,6 +16,7 @@ class SendingUnit(models.Model):
     received_date = models.DateTimeField(null=True, blank=True)
 
 class Link(models.Model):
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
     sending_unit = models.ForeignKey(SendingUnit, on_delete=models.CASCADE, related_name='links')
     link = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     access_code = models.CharField(max_length=6, blank=True) # Code a 6 chiffres générée automatiquement lors de la création du lien
