@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuel d'Utilisation - FastDistrib</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm;
+        }
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #333;
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 0;
+        }
+        h1 {
+            font-size: 20pt;
+            color: #667eea;
+            margin-top: 20pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+        }
+        h2 {
+            font-size: 16pt;
+            color: #764ba2;
+            margin-top: 16pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 13pt;
+            color: #555;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+        }
+        p {
+            margin-bottom: 8pt;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-bottom: 10pt;
+            padding-left: 20pt;
+        }
+        li {
+            margin-bottom: 5pt;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20pt;
+            border-bottom: 2pt solid #667eea;
+            padding-bottom: 10pt;
+        }
+        .header h1 {
+            font-size: 24pt;
+            margin: 0;
+            color: #667eea;
+        }
+        .header p {
+            font-size: 12pt;
+            color: #666;
+            margin: 5pt 0;
+        }
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 4pt solid #667eea;
+            padding: 10pt;
+            margin: 10pt 0;
+        }
+        .warning-box {
+            background-color: #fff4e6;
+            border-left: 4pt solid #ff9800;
+            padding: 10pt;
+            margin: 10pt 0;
+        }
+        .step {
+            background-color: #f9f9f9;
+            border: 1pt solid #ddd;
+            padding: 10pt;
+            margin: 10pt 0;
+            border-radius: 4pt;
+        }
+        .step-number {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12pt;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10pt 0;
+            font-size: 10pt;
+        }
+        table th, table td {
+            border: 1pt solid #ddd;
+            padding: 8pt;
+            text-align: left;
+        }
+        table th {
+            background-color: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .footer {
+            text-align: center;
+            font-size: 9pt;
+            color: #999;
+            margin-top: 20pt;
+            border-top: 1pt solid #ddd;
+            padding-top: 10pt;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>FastDistrib</h1>
+    <p><strong>Manuel d'Utilisation</strong></p>
+    <p>Version 1.0 - Guide Complet pour les Administrateurs</p>
+</div>
+
+<h1>1. Introduction</h1>
+
+<h2>1.1 Qu'est-ce que FastDistrib ?</h2>
+
+<p>FastDistrib est une application web qui permet de distribuer de manière sécurisée des fichiers PDF personnalisés à des destinataires multiples. L'application automatise le processus d'envoi de documents sensibles en générant des liens de téléchargement uniques et sécurisés pour chaque destinataire.</p>
+
+<h2>1.2 Avantages de FastDistrib</h2>
+
+<ul>
+    <li><strong>Sécurité renforcée</strong> : Chaque fichier est protégé par un code d'accès à 6 chiffres et un lien unique</li>
+    <li><strong>Automatisation</strong> : Mapping automatique entre vos fichiers PDF et vos destinataires via un fichier CSV</li>
+    <li><strong>Traçabilité</strong> : Suivi en temps réel des envois et des téléchargements</li>
+    <li><strong>Simplicité</strong> : Interface intuitive pour gérer vos campagnes d'envoi</li>
+    <li><strong>Liens à usage unique</strong> : Chaque lien ne peut être utilisé qu'une seule fois, garantissant la sécurité</li>
+</ul>
+
+<h2>1.3 Prérequis</h2>
+
+<p>Pour utiliser FastDistrib, vous devez :</p>
+<ul>
+    <li>Disposer d'un compte administrateur (créé par un administrateur existant)</li>
+    <li>Avoir préparé un fichier CSV avec les informations des destinataires</li>
+    <li>Avoir préparé les fichiers PDF à distribuer (nommés selon les codes du CSV)</li>
+    <li>Disposer d'une connexion Internet</li>
+</ul>
+
+<div class="info-box">
+    <strong>💡 Astuce :</strong> Assurez-vous que les noms de vos fichiers PDF correspondent exactement aux codes présents dans votre fichier CSV pour un mapping automatique optimal.
+</div>
+
+<h1>2. Première Connexion</h1>
+
+<h2>2.1 Accès à l'Application</h2>
+
+<p>Pour accéder à FastDistrib, ouvrez votre navigateur web et rendez-vous à l'adresse fournie par votre administrateur système. Vous serez redirigé vers la page de connexion.</p>
+
+<h2>2.2 Connexion</h2>
+
+<div class="step">
+    <span class="step-number">Étape 1 :</span> Sur la page de connexion, entrez votre nom d'utilisateur et votre mot de passe dans les champs prévus à cet effet.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 2 :</span> Cliquez sur le bouton "Se connecter" ou appuyez sur Entrée.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 3 :</span> Si vos identifiants sont corrects, vous serez redirigé vers le tableau de bord principal.
+</div>
+
+<div class="warning-box">
+    <strong>⚠️ Important :</strong> Si vous avez oublié votre mot de passe, contactez un administrateur système. Les utilisateurs ne peuvent pas réinitialiser leur mot de passe directement depuis l'interface.
+</div>
+
+<h2>2.3 Tableau de Bord</h2>
+
+<p>Une fois connecté, vous accédez au tableau de bord qui affiche :</p>
+<ul>
+    <li>La liste de tous vos groupes d'envoi existants</li>
+    <li>Pour chaque groupe : le nombre d'emails envoyés et le nombre d'emails en attente</li>
+    <li>Un bouton "Nouveau Groupe" pour créer une nouvelle campagne</li>
+    <li>Un bouton de déconnexion</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h1>3. Création d'un Groupe d'Envoi</h1>
+
+<h2>3.1 Préparation des Fichiers</h2>
+
+<p>Avant de créer un groupe, préparez deux types de fichiers :</p>
+
+<h3>3.1.1 Fichier CSV</h3>
+
+<p>Créez un fichier CSV (séparé par des virgules) contenant les informations de vos destinataires. Le fichier peut avoir deux formats :</p>
+
+<table>
+    <tr>
+        <th>Format 1 : Avec en-têtes</th>
+        <th>Format 2 : Sans en-têtes</th>
+    </tr>
+    <tr>
+        <td>
+            nom,email,code<br>
+            Dupont,dupont@email.com,001<br>
+            Martin,martin@email.com,002
+        </td>
+        <td>
+            Dupont,dupont@email.com,001<br>
+            Martin,martin@email.com,002
+        </td>
+    </tr>
+</table>
+
+<p><strong>Colonnes requises :</strong></p>
+<ul>
+    <li><strong>nom</strong> : Le nom du destinataire (peut être généré depuis l'email si absent)</li>
+    <li><strong>email</strong> : L'adresse email du destinataire (obligatoire)</li>
+    <li><strong>code</strong> : Le code correspondant au nom du fichier PDF (obligatoire)</li>
+</ul>
+
+<h3>3.1.2 Fichiers PDF</h3>
+
+<p>Préparez vos fichiers PDF en respectant ces règles :</p>
+<ul>
+    <li>Nommez chaque fichier PDF avec le code correspondant (ex: <code>001.pdf</code>, <code>002.pdf</code>)</li>
+    <li>Les fichiers doivent avoir l'extension <code>.pdf</code> ou <code>.PDF</code></li>
+    <li>Assurez-vous que chaque code du CSV correspond à un fichier PDF</li>
+</li>
+</ul>
+
+<div class="info-box">
+    <strong>💡 Exemple :</strong> Si votre CSV contient le code "001" pour Dupont, vous devez avoir un fichier nommé "001.pdf" dans votre dossier de fichiers PDF.
+</div>
+
+<h2>3.2 Création du Groupe</h2>
+
+<div class="step">
+    <span class="step-number">Étape 1 :</span> Depuis le tableau de bord, cliquez sur le bouton "Nouveau Groupe" situé en haut à droite.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 2 :</span> Sur la page de création, remplissez le champ "Nom du groupe" (ex: "Bulletins Trimestre 1").
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 3 :</span> Cliquez sur "Choisir un fichier" dans la section "Fichier CSV" et sélectionnez votre fichier CSV préparé.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 4 :</span> Dans la section "Fichiers PDF", cliquez sur "Choisir des fichiers" et sélectionnez tous vos fichiers PDF (vous pouvez sélectionner plusieurs fichiers en maintenant la touche Ctrl ou Cmd).
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 5 :</span> Cliquez sur le bouton "Créer le groupe" pour lancer le traitement.
+</div>
+
+<h2>3.3 Traitement Automatique</h2>
+
+<p>L'application effectue automatiquement :</p>
+<ol>
+    <li>La lecture et l'analyse de votre fichier CSV</li>
+    <li>La détection automatique du format (avec ou sans en-têtes)</li>
+    <li>Le mapping entre les codes du CSV et les noms des fichiers PDF</li>
+    <li>La création des unités d'envoi pour chaque destinataire</li>
+    <li>La génération des liens de téléchargement sécurisés (token UUID + code d'accès à 6 chiffres)</li>
+</li>
+</ol>
+
+<p>Une fois le traitement terminé, vous êtes redirigé vers la page de détail du groupe créé.</p>
+
+<div class="warning-box">
+    <strong>⚠️ Attention :</strong> Si certains codes du CSV ne correspondent à aucun fichier PDF, ces destinataires seront créés mais sans fichier associé. Vérifiez toujours les correspondances avant d'envoyer les emails.
+</div>
+
+<h1>4. Gestion d'un Groupe</h1>
+
+<h2>4.1 Page de Détail d'un Groupe</h2>
+
+<p>La page de détail d'un groupe affiche :</p>
+<ul>
+    <li><strong>Statistiques du groupe</strong> : Nombre total, nombre envoyé, nombre reçu</li>
+    <li><strong>Liste des destinataires</strong> : Tableau avec toutes les informations de chaque destinataire</li>
+    <li><strong>Statut de chaque unité</strong> : Envoyé, Reçu, En attente</li>
+    <li><strong>Dates</strong> : Date d'envoi et date de réception pour chaque destinataire</li>
+</li>
+</ul>
+
+<h2>4.2 Envoi des Emails</h2>
+
+<div class="step">
+    <span class="step-number">Étape 1 :</span> Depuis la page de détail du groupe, cliquez sur le bouton "Envoyer les emails" ou "Envoyer les emails en attente".
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 2 :</span> Sur la page d'envoi, personnalisez votre message email :
+    <ul>
+        <li><strong>Objet de l'email</strong> : Le sujet de votre message (ex: "Votre bulletin de notes")</li>
+        <li><strong>Corps du message</strong> : Le contenu de votre email</li>
+    </ul>
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 3 :</span> Dans le corps du message, utilisez les variables suivantes pour personnaliser chaque email :
+    <ul>
+        <li><code>{nom}</code> : Sera remplacé par le nom du destinataire</li>
+        <li><code>{code}</code> : Sera remplacé par le code d'accès à 6 chiffres</li>
+        <li><code>{lien}</code> : Sera remplacé par l'URL complète de téléchargement</li>
+    </ul>
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 4 :</span> Cliquez sur "Envoyer les emails" pour lancer l'envoi en masse.
+</div>
+
+<div class="info-box">
+    <strong>💡 Exemple de message :</strong><br>
+    Bonjour {nom},<br><br>
+    Votre document est prêt à être téléchargé.<br>
+    Code d'accès : {code}<br>
+    Lien de téléchargement : {lien}<br><br>
+    Ce lien est valable une seule fois.
+</div>
+
+<h2>4.3 Résultats de l'Envoi</h2>
+
+<p>Après l'envoi, une page de résultats s'affiche avec :</p>
+<ul>
+    <li>Le nombre d'emails envoyés avec succès</li>
+    <li>Le nombre d'emails qui ont échoué (avec les raisons si disponibles)</li>
+    <li>Un lien pour retourner au détail du groupe</li>
+</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h1>5. Fonctionnalités Avancées</h1>
+
+<h2>5.1 Renvoyer un Lien</h2>
+
+<p>Si un destinataire a perdu son lien ou son code d'accès, vous pouvez lui renvoyer un nouveau lien :</p>
+
+<div class="step">
+    <span class="step-number">Étape 1 :</span> Depuis la page de détail du groupe, trouvez le destinataire concerné dans le tableau.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 2 :</span> Cliquez sur le bouton "Renvoyer le lien" à côté du destinataire.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 3 :</span> Confirmez l'action. L'ancien lien sera invalidé et un nouveau lien avec un nouveau code d'accès sera généré et envoyé par email.
+</div>
+
+<div class="warning-box">
+    <strong>⚠️ Important :</strong> Lors du renvoi d'un lien, l'ancien lien devient immédiatement invalide. Le destinataire ne pourra plus utiliser l'ancien lien même s'il ne l'a pas encore utilisé.
+</div>
+
+<h2>5.2 Export des Résultats</h2>
+
+<p>Pour exporter les résultats d'un groupe au format CSV :</p>
+
+<div class="step">
+    <span class="step-number">Étape 1 :</span> Depuis la page de détail du groupe, cliquez sur le bouton "Exporter les résultats".
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 2 :</span> Un fichier CSV sera téléchargé automatiquement contenant :
+    <ul>
+        <li>Le nom de chaque destinataire</li>
+        <li>L'email de chaque destinataire</li>
+        <li>La date d'envoi</li>
+        <li>Le statut de réception (Oui/Non)</li>
+        <li>La date de réception</li>
+        <li>Le code d'accès</li>
+    </ul>
+</div>
+
+<p>Ce fichier peut être ouvert dans Excel, LibreOffice Calc ou tout autre tableur pour analyse ou archivage.</p>
+
+<h2>5.3 Suivi en Temps Réel</h2>
+
+<p>Le tableau de bord et les pages de détail sont mis à jour en temps réel. Vous pouvez :</p>
+<ul>
+    <li>Voir immédiatement quand un destinataire télécharge son fichier</li>
+    <li>Consulter les dates exactes d'envoi et de réception</li>
+    <li>Identifier rapidement les destinataires qui n'ont pas encore téléchargé leur fichier</li>
+</li>
+</ul>
+
+<h1>6. Téléchargement par les Destinataires</h1>
+
+<h2>6.1 Processus de Téléchargement</h2>
+
+<p>Voici comment vos destinataires accèdent à leurs fichiers :</p>
+
+<div class="step">
+    <span class="step-number">Étape 1 :</span> Le destinataire reçoit un email contenant son nom, son code d'accès à 6 chiffres et un lien de téléchargement.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 2 :</span> Le destinataire clique sur le lien dans l'email et est redirigé vers une page de vérification.
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 3 :</span> Sur la page de vérification, le destinataire doit saisir :
+    <ul>
+        <li>Son adresse email (généralement pré-remplie)</li>
+        <li>Son code d'accès à 6 chiffres (reçu dans l'email)</li>
+    </ul>
+</div>
+
+<div class="step">
+    <span class="step-number">Étape 4 :</span> Après validation, le fichier PDF est téléchargé automatiquement et le lien devient invalide.
+</div>
+
+<h2>6.2 Sécurité</h2>
+
+<p>Le système de sécurité de FastDistrib garantit que :</p>
+<ul>
+    <li>Seul le destinataire avec le bon email et le bon code peut télécharger le fichier</li>
+    <li>Chaque lien ne peut être utilisé qu'une seule fois</li>
+    <li>Les fichiers sont stockés de manière sécurisée sur le serveur</li>
+    <li>Les codes d'accès sont générés aléatoirement et sont uniques</li>
+</li>
+</ul>
+
+<div class="warning-box">
+    <strong>⚠️ Information pour les destinataires :</strong> Si un destinataire perd son code d'accès ou son lien, il doit contacter l'administrateur pour obtenir un nouveau lien. Il ne peut pas récupérer son code d'accès par lui-même.
+</div>
+
+<h1>7. Dépannage et Questions Fréquentes</h1>
+
+<h2>7.1 Problèmes Courants</h2>
+
+<h3>Le mapping ne fonctionne pas</h3>
+<ul>
+    <li>Vérifiez que les codes dans votre CSV correspondent exactement aux noms de vos fichiers PDF (sans l'extension)</li>
+    <li>Assurez-vous que les fichiers PDF ont bien l'extension .pdf</li>
+    <li>Vérifiez qu'il n'y a pas d'espaces supplémentaires dans les codes du CSV</li>
+</li>
+</ul>
+
+<h3>Les emails ne sont pas envoyés</h3>
+<ul>
+    <li>Vérifiez la configuration email dans les paramètres système</li>
+    <li>Vérifiez que les adresses email dans le CSV sont valides</li>
+    <li>Consultez les logs d'erreur pour plus de détails</li>
+</li>
+</ul>
+
+<h3>Un destinataire ne peut pas télécharger</h3>
+<ul>
+    <li>Vérifiez que le lien n'a pas déjà été utilisé (liens à usage unique)</li>
+    <li>Vérifiez que l'email et le code saisis correspondent exactement à ceux envoyés</li>
+    <li>Vérifiez que le fichier PDF existe bien sur le serveur</li>
+</li>
+</ul>
+
+<h2>7.2 Bonnes Pratiques</h2>
+
+<ul>
+    <li><strong>Testez toujours</strong> avec un petit groupe avant d'envoyer à tous les destinataires</li>
+    <li><strong>Vérifiez les correspondances</strong> CSV/PDF avant l'envoi</li>
+    <li><strong>Sauvegardez</strong> régulièrement vos fichiers CSV et PDF</li>
+    <li><strong>Communiquez clairement</strong> aux destinataires comment utiliser leur code d'accès</li>
+    <li><strong>Exportez les résultats</strong> après chaque campagne pour archivage</li>
+</li>
+</ul>
+
+<h2>7.3 Support</h2>
+
+<p>Pour toute question ou problème technique, contactez votre administrateur système ou l'équipe de support FastDistrib.</p>
+
+<div class="footer">
+    <p>FastDistrib - Manuel d'Utilisation v1.0</p>
+    <p>Document généré en 2024 - Tous droits réservés</p>
+</div>
+
+</body>
+</html>
+
