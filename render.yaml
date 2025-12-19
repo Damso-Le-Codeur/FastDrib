@@ -11,4 +11,14 @@ services:
         value: 4
       - key: DEBUG
         value: false
-    autoDeploy: true
+      # Variables email (sauf le password)
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_USE_TLS
+        value: true
+      - key: EMAIL_HOST_USER
+        value: burkicampus@gmail.com
+      - key: DEFAULT_FROM_EMAIL
+        value: noreply@fastdistrib.com

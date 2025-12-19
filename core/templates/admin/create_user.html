@@ -1,20 +1,595 @@
-<!-- Après le formulaire de connexion -->
-<div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-    <p style="color: #64748b; margin-bottom: 1rem;">
-        <i class="fas fa-info-circle"></i>
-        Premier accès ?
-    </p>
-    <a href="{% url 'create_user_view' %}" class="btn" style="
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 12px;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    ">
-        <i class="fas fa-crown"></i>
-        Créer le premier administrateur
-    </a>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if is_first_user %}Premier Administrateur{% else %}Créer un Utilisateur{% endif %} - FastDistrib</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            background: {% if is_first_user %}linear-gradient(135deg, #10b981 0%, #059669 100%){% else %}linear-gradient(135deg, #667eea 0%, #764ba2 100%){% endif %};
+            color: white;
+        }
+
+        .card-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Messages */
+        .messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .message {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left-color: #10b981;
+            color: #065f46;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left-color: #ef4444;
+            color: #7f1d1d;
+        }
+
+        .message.warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left-color: #f59e0b;
+            color: #92400e;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .strength-weak { color: #ef4444; }
+        .strength-medium { color: #f59e0b; }
+        .strength-strong { color: #10b981; }
+
+        /* Checkboxes */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+
+        /* Button */
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: {% if is_first_user %}linear-gradient(135deg, #10b981 0%, #059669 100%){% else %}linear-gradient(135deg, #667eea 0%, #764ba2 100%){% endif %};
+            color: white;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+        }
+
+        /* First User Info */
+        .first-user-info {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 2px solid #f59e0b;
+        }
+
+        .first-user-info h3 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>
+                    <i class="fas {% if is_first_user %}fa-crown{% else %}fa-user-plus{% endif %}"></i>
+                    {% if is_first_user %}
+                        Premier Administrateur
+                    {% else %}
+                        Créer un Utilisateur
+                    {% endif %}
+                </h1>
+                <p>{% if is_first_user %}Configuration initiale de FastDistrib{% else %}Ajouter un nouvel utilisateur{% endif %}</p>
+            </div>
+            
+            <div class="card-body">
+                <!-- Messages -->
+                <div class="messages">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="message {{ message.tags }}">
+                                <div class="message-content">
+                                    <i class="fas 
+                                        {% if message.tags == 'success' %}fa-check-circle
+                                        {% elif message.tags == 'error' %}fa-exclamation-circle
+                                        {% elif message.tags == 'warning' %}fa-exclamation-triangle
+                                        {% else %}fa-info-circle{% endif %}">
+                                    </i>
+                                    <span>{{ message }}</span>
+                                </div>
+                                <button class="message-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Info pour premier utilisateur -->
+                {% if is_first_user %}
+                <div class="first-user-info">
+                    <h3><i class="fas fa-info-circle"></i> Configuration Initiale</h3>
+                    <p>Créez le premier compte administrateur pour commencer à utiliser FastDistrib.</p>
+                    <p><small>Ce compte aura tous les droits d'administration.</small></p>
+                </div>
+                {% endif %}
+
+                <!-- Formulaire -->
+                <form method="post" id="userForm">
+                    {% csrf_token %}
+                    
+                    <!-- Nom d'utilisateur -->
+                    <div class="form-group">
+                        <label class="form-label" for="username">
+                            <i class="fas fa-user"></i>
+                            Nom d'utilisateur *
+                        </label>
+                        <input type="text" 
+                               id="username" 
+                               name="username" 
+                               class="form-control" 
+                               required
+                               placeholder="ex: admin"
+                               autofocus>
+                    </div>
+
+                    <!-- Email (optionnel) -->
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            <i class="fas fa-envelope"></i>
+                            Email (optionnel)
+                        </label>
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               class="form-control" 
+                               placeholder="ex: admin@example.com">
+                    </div>
+
+                    <!-- Mot de passe -->
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <i class="fas fa-key"></i>
+                            Mot de passe *
+                        </label>
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
+                               class="form-control" 
+                               required
+                               placeholder="Minimum 8 caractères"
+                               minlength="8">
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+
+                    <!-- Confirmation mot de passe -->
+                    <div class="form-group">
+                        <label class="form-label" for="confirm_password">
+                            <i class="fas fa-key"></i>
+                            Confirmer le mot de passe *
+                        </label>
+                        <input type="password" 
+                               id="confirm_password" 
+                               name="confirm_password" 
+                               class="form-control" 
+                               required
+                               placeholder="Retapez le mot de passe">
+                        <div id="passwordMatch" style="font-size: 0.875rem; margin-top: 0.5rem;"></div>
+                    </div>
+
+                    <!-- Options admin (sauf pour premier utilisateur) -->
+                    {% if not is_first_user and user.is_authenticated and user.is_staff %}
+                    <div class="alert alert-info">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <i class="fas fa-shield-alt"></i>
+                            <strong>Permissions d'administration</strong>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="is_staff" name="is_staff" checked>
+                            <label class="form-check-label" for="is_staff">
+                                Accès administrateur (dashboard)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="is_superuser" name="is_superuser">
+                            <label class="form-check-label" for="is_superuser">
+                                Super administrateur (tous les droits)
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Boutons -->
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas {% if is_first_user %}fa-crown{% else %}fa-user-plus{% endif %}"></i>
+                            {% if is_first_user %}
+                                Créer le premier administrateur
+                            {% else %}
+                                Créer l'utilisateur
+                            {% endif %}
+                        </button>
+                        
+                        {% if is_first_user %}
+                        <a href="{% url 'home' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Annuler
+                        </a>
+                        {% else %}
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i>
+                                Retour au dashboard
+                            </a>
+                            {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-secondary">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Se connecter
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Vérification force mot de passe
+        document.getElementById('password')?.addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthDiv.textContent = '';
+                strengthDiv.className = 'password-strength';
+                return;
+            }
+            
+            let strength = 0;
+            let message = '';
+            let className = '';
+            
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (password.length < 8) {
+                message = 'Trop court (min 8 caractères)';
+                className = 'strength-weak';
+            } else if (strength < 2) {
+                message = 'Faible';
+                className = 'strength-weak';
+            } else if (strength < 3) {
+                message = 'Moyen';
+                className = 'strength-medium';
+            } else {
+                message = 'Fort';
+                className = 'strength-strong';
+            }
+            
+            strengthDiv.textContent = `Force: ${message}`;
+            strengthDiv.className = `password-strength ${className}`;
+        });
+
+        // Vérification correspondance mots de passe
+        document.getElementById('confirm_password')?.addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirm = this.value;
+            const matchDiv = document.getElementById('passwordMatch');
+            
+            if (confirm.length === 0) {
+                matchDiv.textContent = '';
+                matchDiv.style.color = '';
+                return;
+            }
+            
+            if (password === confirm) {
+                matchDiv.textContent = '✓ Les mots de passe correspondent';
+                matchDiv.style.color = '#10b981';
+            } else {
+                matchDiv.textContent = '✗ Les mots de passe ne correspondent pas';
+                matchDiv.style.color = '#ef4444';
+            }
+        });
+
+        // Validation du formulaire
+        document.getElementById('userForm')?.addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm_password').value;
+            const username = document.getElementById('username').value.trim();
+            
+            if (!username) {
+                e.preventDefault();
+                showNotification('Le nom d\'utilisateur est obligatoire', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                e.preventDefault();
+                showNotification('Le mot de passe doit contenir au moins 8 caractères', 'error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                e.preventDefault();
+                showNotification('Les mots de passe ne correspondent pas', 'error');
+                return;
+            }
+            
+            // Confirmation pour premier utilisateur
+            {% if is_first_user %}
+            if (!confirm('Êtes-vous sûr de vouloir créer le premier administrateur ?\n\nCe compte aura tous les droits.')) {
+                e.preventDefault();
+                return;
+            }
+            {% endif %}
+            
+            // Désactiver le bouton pour éviter les doubles soumissions
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <span class="spinner"></span>
+                Création en cours...
+            `;
+        });
+
+        // Auto-hide messages
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(message => {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 300);
+            });
+        }, 5000);
+
+        // Notification
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: '#10b981',
+                warning: '#f59e0b',
+                info: '#3b82f6',
+                error: '#ef4444'
+            };
+
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type] || colors.info};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                animation: slideIn 0.3s ease;
+            `;
+
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Animation pour le spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+            .spinner {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top-color: white;
+                animation: spin 0.6s linear infinite;
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
